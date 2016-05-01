@@ -14,6 +14,10 @@
 		93811DC71CD5AC18003E6CBF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 93811DC51CD5AC18003E6CBF /* LaunchScreen.storyboard */; };
 		93811DD01CD5B5A9003E6CBF /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93811DCF1CD5B5A9003E6CBF /* LoginViewController.swift */; };
 		93811DD21CD5BCAC003E6CBF /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93811DD11CD5BCAC003E6CBF /* Constants.swift */; };
+		93811DD91CD5CED0003E6CBF /* Helper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93811DD81CD5CED0003E6CBF /* Helper.swift */; };
+		93811DDB1CD5D3EF003E6CBF /* NetworkUdacity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93811DDA1CD5D3EF003E6CBF /* NetworkUdacity.swift */; };
+		93811DDD1CD5D4B7003E6CBF /* ConstantsUdacity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93811DDC1CD5D4B7003E6CBF /* ConstantsUdacity.swift */; };
+		93A96C931CD6649A00FF8286 /* UdacityConvenience.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93A96C921CD6649A00FF8286 /* UdacityConvenience.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -26,6 +30,10 @@
 		93811DC81CD5AC18003E6CBF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		93811DCF1CD5B5A9003E6CBF /* LoginViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = LoginViewController.swift; path = Controllers/LoginViewController.swift; sourceTree = "<group>"; };
 		93811DD11CD5BCAC003E6CBF /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
+		93811DD81CD5CED0003E6CBF /* Helper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Helper.swift; sourceTree = "<group>"; };
+		93811DDA1CD5D3EF003E6CBF /* NetworkUdacity.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkUdacity.swift; sourceTree = "<group>"; };
+		93811DDC1CD5D4B7003E6CBF /* ConstantsUdacity.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ConstantsUdacity.swift; path = Model/ConstantsUdacity.swift; sourceTree = "<group>"; };
+		93A96C921CD6649A00FF8286 /* UdacityConvenience.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UdacityConvenience.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -60,6 +68,8 @@
 			children = (
 				93811DB91CD5AC17003E6CBF /* AppDelegate.swift */,
 				93811DD11CD5BCAC003E6CBF /* Constants.swift */,
+				93811DD81CD5CED0003E6CBF /* Helper.swift */,
+				93811DD51CD5CD35003E6CBF /* Model */,
 				93811DCE1CD5B519003E6CBF /* Controller */,
 				93811DD31CD5BCBF003E6CBF /* Assets */,
 				93811DD41CD5BCD4003E6CBF /* Supporting Files */,
@@ -92,6 +102,32 @@
 				93811DC81CD5AC18003E6CBF /* Info.plist */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		93811DD51CD5CD35003E6CBF /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				93811DD61CD5CD8F003E6CBF /* Clients */,
+			);
+			name = Model;
+			sourceTree = "<group>";
+		};
+		93811DD61CD5CD8F003E6CBF /* Clients */ = {
+			isa = PBXGroup;
+			children = (
+				93811DD71CD5CDA2003E6CBF /* Udacity */,
+			);
+			name = Clients;
+			sourceTree = "<group>";
+		};
+		93811DD71CD5CDA2003E6CBF /* Udacity */ = {
+			isa = PBXGroup;
+			children = (
+				93811DDA1CD5D3EF003E6CBF /* NetworkUdacity.swift */,
+				93811DDC1CD5D4B7003E6CBF /* ConstantsUdacity.swift */,
+				93A96C921CD6649A00FF8286 /* UdacityConvenience.swift */,
+			);
+			name = Udacity;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -167,6 +203,10 @@
 			files = (
 				93811DD01CD5B5A9003E6CBF /* LoginViewController.swift in Sources */,
 				93811DC21CD5AC18003E6CBF /* On_The_Map.xcdatamodeld in Sources */,
+				93811DDD1CD5D4B7003E6CBF /* ConstantsUdacity.swift in Sources */,
+				93A96C931CD6649A00FF8286 /* UdacityConvenience.swift in Sources */,
+				93811DDB1CD5D3EF003E6CBF /* NetworkUdacity.swift in Sources */,
+				93811DD91CD5CED0003E6CBF /* Helper.swift in Sources */,
 				93811DBA1CD5AC17003E6CBF /* AppDelegate.swift in Sources */,
 				93811DD21CD5BCAC003E6CBF /* Constants.swift in Sources */,
 			);
@@ -318,6 +358,7 @@
 				93811DCD1CD5AC18003E6CBF /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 

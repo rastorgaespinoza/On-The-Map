@@ -14,6 +14,7 @@ class LoginViewController: UIViewController {
     
     var appDelegate: AppDelegate!
     var keyboardOnScreen = false
+    private var netUdacity: NetworkUdacity!
 
     // MARK: Outlets
     @IBOutlet weak var udacityImageView: UIImageView!
@@ -28,6 +29,7 @@ class LoginViewController: UIViewController {
         
         // get the app delegate
         appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+        netUdacity = NetworkUdacity.sharedInstance()
 
         configureUI()
         
@@ -40,6 +42,39 @@ class LoginViewController: UIViewController {
     override func viewWillDisappear(animated: Bool) {
         super.viewWillDisappear(animated)
         unsubscribeFromAllNotifications()
+    }
+    
+    
+    @IBAction func loginPressed(sender: AnyObject) {
+        
+        guard (!usernameTextField.text!.isEmpty &&
+            !passwordTextField.text!.isEmpty) else {
+                Helper.presentAlert(self, title: "Username or Password Empty.", message: "Please complete data empty")
+                return
+        }
+        setUIEnabled(false)
+        
+        let userAndPass: [String: String] = [
+            NetworkUdacity.JSONBodyKeys.Username: usernameTextField.text!,
+            NetworkUdacity.JSONBodyKeys.Password: passwordTextField.text!
+        ]
+        
+        netUdacity.authenticateToUdacity(userAndPass) { (success, errorString) in
+            if success {
+                self.completeLogin()
+            }else {
+                print(errorString)
+            }
+        }
+        
+        
+    }
+    
+    // MARK: Login
+    private func completeLogin() {
+
+        let controller = storyboard!.instantiateViewControllerWithIdentifier("TabBarVC") as! UITabBarController
+        presentViewController(controller, animated: true, completion: nil)
     }
 
 }
