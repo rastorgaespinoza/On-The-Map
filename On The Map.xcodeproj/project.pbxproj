@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		934CFDAB1CDE7E0D00746FB8 /* TabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 934CFDAA1CDE7E0D00746FB8 /* TabBarController.swift */; };
+		934CFDAD1CDE92A900746FB8 /* InformationPostingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 934CFDAC1CDE92A900746FB8 /* InformationPostingViewController.swift */; };
+		93543E621CD97F65004F74C7 /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93543E611CD97F65004F74C7 /* MapViewController.swift */; };
 		93811DBA1CD5AC17003E6CBF /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93811DB91CD5AC17003E6CBF /* AppDelegate.swift */; };
 		93811DBF1CD5AC17003E6CBF /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 93811DBD1CD5AC17003E6CBF /* Main.storyboard */; };
 		93811DC21CD5AC18003E6CBF /* On_The_Map.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 93811DC01CD5AC18003E6CBF /* On_The_Map.xcdatamodeld */; };
@@ -27,6 +30,9 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		934CFDAA1CDE7E0D00746FB8 /* TabBarController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TabBarController.swift; path = Controllers/TabBarController.swift; sourceTree = "<group>"; };
+		934CFDAC1CDE92A900746FB8 /* InformationPostingViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = InformationPostingViewController.swift; path = Controllers/InformationPostingViewController.swift; sourceTree = "<group>"; };
+		93543E611CD97F65004F74C7 /* MapViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MapViewController.swift; path = Controllers/MapViewController.swift; sourceTree = "<group>"; };
 		93811DB61CD5AC17003E6CBF /* On The Map.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "On The Map.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		93811DB91CD5AC17003E6CBF /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		93811DBE1CD5AC17003E6CBF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -94,6 +100,9 @@
 			children = (
 				93811DCF1CD5B5A9003E6CBF /* LoginViewController.swift */,
 				93A96C9F1CD6AB4E00FF8286 /* StudentsViewController.swift */,
+				93543E611CD97F65004F74C7 /* MapViewController.swift */,
+				934CFDAA1CDE7E0D00746FB8 /* TabBarController.swift */,
+				934CFDAC1CDE92A900746FB8 /* InformationPostingViewController.swift */,
 			);
 			name = Controller;
 			sourceTree = "<group>";
@@ -228,6 +237,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				93A96C961CD6A33700FF8286 /* StudentLocation.swift in Sources */,
+				934CFDAB1CDE7E0D00746FB8 /* TabBarController.swift in Sources */,
 				93A96C9C1CD6A72200FF8286 /* ParseConvenience.swift in Sources */,
 				93811DD01CD5B5A9003E6CBF /* LoginViewController.swift in Sources */,
 				93811DC21CD5AC18003E6CBF /* On_The_Map.xcdatamodeld in Sources */,
@@ -235,11 +245,13 @@
 				93811DDD1CD5D4B7003E6CBF /* ConstantsUdacity.swift in Sources */,
 				93A96C9A1CD6A53400FF8286 /* ConstantsParse.swift in Sources */,
 				93A96C931CD6649A00FF8286 /* UdacityConvenience.swift in Sources */,
+				934CFDAD1CDE92A900746FB8 /* InformationPostingViewController.swift in Sources */,
 				93811DDB1CD5D3EF003E6CBF /* NetworkUdacity.swift in Sources */,
 				93811DD91CD5CED0003E6CBF /* Helper.swift in Sources */,
 				93811DBA1CD5AC17003E6CBF /* AppDelegate.swift in Sources */,
 				93A96CA01CD6AB4E00FF8286 /* StudentsViewController.swift in Sources */,
 				93811DD21CD5BCAC003E6CBF /* Constants.swift in Sources */,
+				93543E621CD97F65004F74C7 /* MapViewController.swift in Sources */,
 				93A96CA21CD6DB2000FF8286 /* TemporalData.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

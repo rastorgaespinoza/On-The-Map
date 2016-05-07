@@ -22,7 +22,6 @@ class NetworkUdacity : NSObject {
     
     
     // authentication state
-    var requestToken: String? = nil
     var sessionID : String? = nil
     var userID : Int? = nil
     
@@ -37,7 +36,6 @@ class NetworkUdacity : NSObject {
     func taskForGETMethod(method: String, parameters: [String:AnyObject], completionHandlerForGET: (result: AnyObject!, error: NSError?) -> Void) -> NSURLSessionDataTask {
         var newParameters = parameters
         /* 1. Set the parameters */
-//        newParameters[ParameterKeys.ApiKey] = Constants.ApiKey
         
         /* 2/3. Build the URL, Configure the request */
         let request = NSMutableURLRequest(URL: udacityURLFromParameters(newParameters, withPathExtension: method))
@@ -111,8 +109,8 @@ class NetworkUdacity : NSObject {
             
             /* GUARD: Did we get a successful 2XX response? */
             guard let statusCode = (response as? NSHTTPURLResponse)?.statusCode where statusCode >= 200 && statusCode <= 299 else {
-                print((response as? NSHTTPURLResponse)?.statusCode)
-                sendError("Your request returned a status code other than 2xx!")
+                let statCode = (response as? NSHTTPURLResponse)?.statusCode
+                sendError("Your request returned a status code other than 2xx! (statusCode: \(statCode!)")
                 return
             }
             
@@ -135,6 +133,64 @@ class NetworkUdacity : NSObject {
         return task
     }
     
+    
+    func taskForDELETEMethod(method: String, parameters: [String:AnyObject], completionHandlerForDELETE: (result: AnyObject!, error: NSError?) -> Void) -> NSURLSessionDataTask {
+        /* 1. Set the parameters */
+        var newParameters = parameters
+        
+        /* 2/3. Build the URL, Configure the request */
+        let request = NSMutableURLRequest(URL: udacityURLFromParameters(newParameters, withPathExtension: method))
+        request.HTTPMethod = "DELETE"
+        
+        var xsrfCookie: NSHTTPCookie? = nil
+        let sharedCookieStorage = NSHTTPCookieStorage.sharedHTTPCookieStorage()
+        for cookie in sharedCookieStorage.cookies! {
+            if cookie.name == "XSRF-TOKEN" { xsrfCookie = cookie }
+        }
+        if let xsrfCookie = xsrfCookie {
+            request.setValue(xsrfCookie.value, forHTTPHeaderField: "X-XSRF-TOKEN")
+        }
+        
+        /* 4. Make the request */
+        let task = session.dataTaskWithRequest(request) { (data, response, error) in
+            
+            func sendError(error: String) {
+                print(error)
+                let userInfo = [NSLocalizedDescriptionKey : error]
+                completionHandlerForDELETE(result: nil, error: NSError(domain: "taskForDELETEMethod", code: 1, userInfo: userInfo))
+            }
+            
+            /* GUARD: Was there an error? */
+            guard (error == nil) else {
+                sendError("There was an error with your request: \(error)")
+                return
+            }
+            
+            /* GUARD: Did we get a successful 2XX response? */
+            guard let statusCode = (response as? NSHTTPURLResponse)?.statusCode where statusCode >= 200 && statusCode <= 299 else {
+                print((response as? NSHTTPURLResponse)?.statusCode)
+                sendError("Your request returned a status code other than 2xx!")
+                return
+            }
+            
+            /* GUARD: Was there any data returned? */
+            guard let data = data else {
+                sendError("No data was returned by the request!")
+                return
+            }
+            
+            //SKIP THE FIRST 5 CHARACTERS OF THE RESPONSE FROM THE UDACITY API
+            let newData = data.subdataWithRange(NSMakeRange(5, data.length - 5)) /* subset response data! */
+            
+            /* 5/6. Parse the data and use the data (happens in completion handler) */
+            self.convertDataWithCompletionHandler(newData, completionHandlerForConvertData: completionHandlerForDELETE)
+        }
+        
+        /* 7. Start the request */
+        task.resume()
+        
+        return task
+    }
     
     // MARK: Helpers
     
@@ -162,34 +218,6 @@ class NetworkUdacity : NSObject {
         completionHandlerForConvertData(result: parsedResult, error: nil)
     }
     
-    // given rar Dictionary, return a JSON
-//    func createJSONString(dictionary: [String: AnyObject]) -> String {
-//        if dictionary.isEmpty {
-//            return ""
-//        }else {
-//            let stringValues: [String]= []()
-//            for (key, value) in dictionary {
-//                
-//                
-//            }
-//            
-//            return "{\(stringValues.joinWithSeparator(,))}"
-//        }
-//        
-//        
-//    }
-    func convertDicToJSON(dictionary: [String: AnyObject], completionHandler: (result: AnyObject!, error: NSError?) -> Void) {
-        
-        var parsedResult: AnyObject!
-        do {
-        parsedResult = try NSJSONSerialization.dataWithJSONObject(dictionary, options: [])
-        } catch {
-        let userInfo = [NSLocalizedDescriptionKey : "Could not parse the data as JSON: '\(dictionary)'"]
-        completionHandler(result: nil, error: NSError(domain: "convertDataWithCompletionHandler", code: 1, userInfo: userInfo))
-        }
-        
-        completionHandler(result: parsedResult, error: nil)
-    }
     
     // create a URL from parameters
     private func udacityURLFromParameters(parameters: [String:AnyObject], withPathExtension: String? = nil) -> NSURL {

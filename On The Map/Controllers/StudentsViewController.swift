@@ -13,22 +13,23 @@ class StudentsViewController: UIViewController {
     @IBOutlet weak var tableView: UITableView!
     
     private let cellID = "cellStudent"
-    private var pConnection: ParseConnection!
-    private var tmpData: TemporalData!
+    private var pConnection: ParseConnection = ParseConnection.sharedInstance()
+    private var tmpData: TemporalData = TemporalData.sharedInstance()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        pConnection = ParseConnection.sharedInstance()
-        tmpData = TemporalData.sharedInstance()
+        if tmpData.students.isEmpty {
+            getStudents()
+        }
         
-        getStudents()
     }
     
     private func getStudents() {
         pConnection.getStudentLocationsFromParse { (result, errorString) in
             if let result = result {
                 self.tmpData.students = result
+                
                 dispatch_async(dispatch_get_main_queue()) {
                     self.tableView.reloadData()
                 }
@@ -38,6 +39,7 @@ class StudentsViewController: UIViewController {
             }
         }
     }
+    
 
 }
 
@@ -51,10 +53,17 @@ extension StudentsViewController: UITableViewDataSource, UITableViewDelegate {
         let cell = tableView.dequeueReusableCellWithIdentifier(cellID)!
         
         let name = "\(tmpData.students[indexPath.row].firstName) \(tmpData.students[indexPath.row].lastName)"
+        let subtitle = tmpData.students[indexPath.row].mediaURL
         cell.textLabel!.text = name
+        cell.detailTextLabel?.text = subtitle
+        
         let image = UIImage(named: "pin")!
         cell.imageView?.image = image
         
         return cell
+    }
+    
+    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        Helper.openURL(self, urlString: tmpData.students[indexPath.row].mediaURL)
     }
 }

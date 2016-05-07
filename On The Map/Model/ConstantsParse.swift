@@ -24,7 +24,7 @@ extension ParseConnection {
     
     // MARK: Methods
     struct Methods {
-        static let GetStudentLocations = "/classes/StudentLocation"
+        static let StudentLocations = "/classes/StudentLocation"
     }
     
     struct HTTPHeaders {
@@ -36,8 +36,7 @@ extension ParseConnection {
     struct ParameterKeys {
         static let SessionID = "session_id"
         static let UserID = "userID"
-        static let HTTPMethodDelete = "DELETE"
-        static let HTTPMethodPost = "POST"
+        static let UniqueKey = "uniqueKey"
     }
     
     // MARK: JSON Body Keys

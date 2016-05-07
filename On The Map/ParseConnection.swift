@@ -14,21 +14,13 @@ class ParseConnection: NSObject {
     
     // shared session
     var session = NSURLSession.sharedSession()
-    
-    
-//    // authentication state
-//    var requestToken: String? = nil
-//    var sessionID : String? = nil
-//    var userID : Int? = nil
-    
+
     // MARK: Initializers
-    
     override init() {
         super.init()
     }
     
     // MARK: GET
-    
     func taskForGETMethodParse(method: String, parameters: [String:AnyObject], completionHandlerForGET: (result: AnyObject!, error: NSError?) -> Void) -> NSURLSessionDataTask {
         var newParameters = parameters
         /* 1. Set the parameters */
@@ -135,6 +127,60 @@ class ParseConnection: NSObject {
         
         return task
     }
+    
+    func taskForPUTMethodParse(method: String, parameters: [String:AnyObject], jsonBody: String, completionHandlerForPUT: (result: AnyObject!, error: NSError?) -> Void) -> NSURLSessionDataTask {
+        var newParameters = parameters
+        /* 1. Set the parameters */
+        //en este caso no se setean parametros...
+        
+        /* 2/3. Build the URL, Configure the request */
+        let url = parseURLFromParameters(newParameters, withPathExtension: method)
+        
+        let request = NSMutableURLRequest(URL: url)
+        request.HTTPMethod = "PUT"
+        request.addValue(ParseConnection.Constants.AppID, forHTTPHeaderField: "X-Parse-Application-Id")
+        request.addValue(ParseConnection.Constants.RestApiKey, forHTTPHeaderField: "X-Parse-REST-API-Key")
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.HTTPBody = jsonBody.dataUsingEncoding(NSUTF8StringEncoding)
+        
+        
+        /* 4. Make the request */
+        let task = session.dataTaskWithRequest(request) { (data, response, error) in
+            
+            func sendError(error: String) {
+                print(error)
+                let userInfo = [NSLocalizedDescriptionKey : error]
+                completionHandlerForPUT(result: nil, error: NSError(domain: "taskForGETMethodParse", code: 1, userInfo: userInfo))
+            }
+            
+            /* GUARD: Was there an error? */
+            guard (error == nil) else {
+                sendError("There was an error with your request: \(error)")
+                return
+            }
+            
+            /* GUARD: Did we get a successful 2XX response? */
+            guard let statusCode = (response as? NSHTTPURLResponse)?.statusCode where statusCode >= 200 && statusCode <= 299 else {
+                sendError("Your request returned a status code other than 2xx!")
+                return
+            }
+            
+            /* GUARD: Was there any data returned? */
+            guard let data = data else {
+                sendError("No data was returned by the request!")
+                return
+            }
+            
+            /* 5/6. Parse the data and use the data (happens in completion handler) */
+            self.convertDataWithCompletionHandler(data, completionHandlerForConvertData: completionHandlerForPUT)
+        }
+        
+        /* 7. Start the request */
+        task.resume()
+        
+        return task
+    }
+    
     
     
     // MARK: Helpers

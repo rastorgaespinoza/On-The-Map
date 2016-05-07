@@ -19,9 +19,22 @@ class Helper {
         )
         
         let okButton = UIAlertAction(title: "OK", style: .Default, handler: nil)
-        
         alertView.addAction(okButton)
         
+        
         view.presentViewController(alertView, animated: true, completion: nil)
+        alertView.view.layoutIfNeeded()
+    }
+    
+    class func openURL(view: UIViewController, urlString: String) {
+        let app = UIApplication.sharedApplication()
+        
+        if let url = NSURL(string: urlString) {
+            if !app.openURL(url) {
+                Helper.presentAlert(view, title: "error to open safari", message: "No se pudo abrir la url")
+            }
+        }else{
+            Helper.presentAlert(view, title: "error to open safari", message: "Not valid URL")
+        }
     }
 }

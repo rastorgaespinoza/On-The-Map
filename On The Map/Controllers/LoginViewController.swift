@@ -22,6 +22,7 @@ class LoginViewController: UIViewController {
     @IBOutlet weak var passwordTextField: UITextField!
     @IBOutlet weak var loginButton: UIButton!
     
+    @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     // MARK: Life Cycle
     
     override func viewDidLoad() {
@@ -47,28 +48,42 @@ class LoginViewController: UIViewController {
     
     @IBAction func loginPressed(sender: AnyObject) {
         
+        //1. chek empty textfields
         guard (!usernameTextField.text!.isEmpty &&
             !passwordTextField.text!.isEmpty) else {
                 Helper.presentAlert(self, title: "Username or Password Empty.", message: "Please complete data empty")
                 return
         }
-        setUIEnabled(false)
         
         let userAndPass: [String: String] = [
             NetworkUdacity.JSONBodyKeys.Username: usernameTextField.text!,
             NetworkUdacity.JSONBodyKeys.Password: passwordTextField.text!
         ]
         
+        
+        setUIEnabled(false)
         netUdacity.authenticateToUdacity(userAndPass) { (success, errorString) in
-            if success {
-                self.completeLogin()
-            }else {
-                print(errorString)
+            dispatch_async(dispatch_get_main_queue() ) {
+                if success {
+                    self.completeLogin()
+                }else {
+                    Helper.presentAlert(self, title: "Login failed", message: errorString!)
+                    self.setUIEnabled(true)
+                    print(errorString)
+                }
             }
+            
         }
         
         
     }
+    
+    @IBAction func signUpAction(sender: AnyObject) {
+        let app = UIApplication.sharedApplication()
+        let urlToOpen = "https://www.udacity.com/account/auth#!/signup"
+        app.openURL(NSURL(string: urlToOpen)!)
+    }
+    
     
     // MARK: Login
     private func completeLogin() {
@@ -145,7 +160,9 @@ extension LoginViewController {
         // adjust login button alpha
         if enabled {
             loginButton.alpha = 1.0
+            activityIndicator.stopAnimating()
         } else {
+            activityIndicator.startAnimating()
             loginButton.alpha = 0.5
         }
     }
@@ -168,7 +185,7 @@ extension LoginViewController {
         let textFieldPaddingView = UIView(frame: textFieldPaddingViewFrame)
         textField.leftView = textFieldPaddingView
         textField.leftViewMode = .Always
-        textField.backgroundColor = Constants.UI.lightOrangeColor
+//        textField.backgroundColor = Constants.UI.lightOrangeColor
         textField.textColor = UIColor.whiteColor()
         textField.attributedPlaceholder = NSAttributedString(string: textField.placeholder!, attributes: [NSForegroundColorAttributeName: UIColor.whiteColor()])
         textField.tintColor = UIColor.whiteColor()
