@@ -10,6 +10,7 @@
 		934CFDAB1CDE7E0D00746FB8 /* TabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 934CFDAA1CDE7E0D00746FB8 /* TabBarController.swift */; };
 		934CFDAD1CDE92A900746FB8 /* InformationPostingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 934CFDAC1CDE92A900746FB8 /* InformationPostingViewController.swift */; };
 		93543E621CD97F65004F74C7 /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93543E611CD97F65004F74C7 /* MapViewController.swift */; };
+		935B82E91CDF8FBA00E32914 /* GeneralConnection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 935B82E81CDF8FBA00E32914 /* GeneralConnection.swift */; };
 		93811DBA1CD5AC17003E6CBF /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93811DB91CD5AC17003E6CBF /* AppDelegate.swift */; };
 		93811DBF1CD5AC17003E6CBF /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 93811DBD1CD5AC17003E6CBF /* Main.storyboard */; };
 		93811DC21CD5AC18003E6CBF /* On_The_Map.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 93811DC01CD5AC18003E6CBF /* On_The_Map.xcdatamodeld */; };
@@ -33,6 +34,7 @@
 		934CFDAA1CDE7E0D00746FB8 /* TabBarController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TabBarController.swift; path = Controllers/TabBarController.swift; sourceTree = "<group>"; };
 		934CFDAC1CDE92A900746FB8 /* InformationPostingViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = InformationPostingViewController.swift; path = Controllers/InformationPostingViewController.swift; sourceTree = "<group>"; };
 		93543E611CD97F65004F74C7 /* MapViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MapViewController.swift; path = Controllers/MapViewController.swift; sourceTree = "<group>"; };
+		935B82E81CDF8FBA00E32914 /* GeneralConnection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = GeneralConnection.swift; path = Model/GeneralConnection.swift; sourceTree = "<group>"; };
 		93811DB61CD5AC17003E6CBF /* On The Map.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "On The Map.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		93811DB91CD5AC17003E6CBF /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		93811DBE1CD5AC17003E6CBF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -140,6 +142,7 @@
 				93A96C941CD6A30700FF8286 /* Parse */,
 				93811DD71CD5CDA2003E6CBF /* Udacity */,
 				93A96CA11CD6DB2000FF8286 /* TemporalData.swift */,
+				935B82E81CDF8FBA00E32914 /* GeneralConnection.swift */,
 			);
 			name = Clients;
 			sourceTree = "<group>";
@@ -242,6 +245,7 @@
 				93811DD01CD5B5A9003E6CBF /* LoginViewController.swift in Sources */,
 				93811DC21CD5AC18003E6CBF /* On_The_Map.xcdatamodeld in Sources */,
 				93A96C981CD6A40600FF8286 /* ParseConnection.swift in Sources */,
+				935B82E91CDF8FBA00E32914 /* GeneralConnection.swift in Sources */,
 				93811DDD1CD5D4B7003E6CBF /* ConstantsUdacity.swift in Sources */,
 				93A96C9A1CD6A53400FF8286 /* ConstantsParse.swift in Sources */,
 				93A96C931CD6649A00FF8286 /* UdacityConvenience.swift in Sources */,

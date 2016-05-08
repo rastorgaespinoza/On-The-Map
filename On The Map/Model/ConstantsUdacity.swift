@@ -32,8 +32,7 @@ extension NetworkUdacity {
     struct ParameterKeys {
         static let SessionID = "session_id"
         static let UserID = "userID"
-        static let HTTPMethodDelete = "DELETE"
-        static let HTTPMethodPost = "POST"
+        static let id = "id"
     }
     
     // MARK: JSON Body Keys
@@ -55,6 +54,9 @@ extension NetworkUdacity {
         
         // MARK: Get User Data
         static let User = "user"
+        
+        static let FirstName = "first_name"
+        static let LastName = "last_name"
         
     }
     

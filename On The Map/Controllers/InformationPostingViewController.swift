@@ -7,8 +7,19 @@
 //
 
 import UIKit
+import MapKit
 
 class InformationPostingViewController: UIViewController {
+
+    let pConection: ParseConnection = ParseConnection.sharedInstance()
+    
+    //Varibales for posting location
+    var data = [String:AnyObject]()
+    var objectId: String?
+    var lat:Double?
+    var long:Double?
+    var address: String?
+    var url: String?
     
     @IBOutlet weak var bottomView: UIView!
     @IBOutlet weak var buttonCancel: UIButton!
@@ -16,16 +27,145 @@ class InformationPostingViewController: UIViewController {
     @IBOutlet weak var findMapSubmit: UIButton!
     @IBOutlet weak var linkToShare: UITextField!
     @IBOutlet weak var locationText: UITextField!
+    @IBOutlet weak var mapView: MKMapView!
+    @IBOutlet weak var submit: UIButton!
+    @IBOutlet weak var submitView: UIView!
     @IBOutlet weak var topView: UIView!
     @IBOutlet weak var topInitialView: UIView!
 
+    
+
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        findMapSubmit.layer.cornerRadius = 10
+        submit.layer.cornerRadius = 10
+        submitView.layer.cornerRadius = 10
+        configureTextField(linkToShare)
+        configureTextField(locationText)
     }
     
     @IBAction func cancelAction(sender: AnyObject) {
         dismissViewControllerAnimated(true, completion: nil)
     }
 
+    @IBAction func findOnTheMap(sender: AnyObject) {
+        guard let location = locationText.text where !location.isEmpty else {
+            Helper.presentAlert(self, title: nil, message: "Must Enter a Location.")
+            return
+        }
+        
+        
+        //retrieved from Stackoverflow: "How to get lat and long coordinates from address string"
+        //url: http://stackoverflow.com/questions/18563084/how-to-get-lat-and-long-coordinates-from-address-string
+        //answered Dec 16 '15 at 5:26 from Vijay Singh Rana
+
+        let geocoder: CLGeocoder = CLGeocoder()
+        geocoder.geocodeAddressString(location) { (placemarks, error) in
+            if let placemarks = placemarks where (placemarks.count > 0) {
+                self.changeView()
+                let topResult: CLPlacemark = placemarks.first!
+                let placemark: MKPlacemark = MKPlacemark(placemark: topResult)
+                var region: MKCoordinateRegion = self.mapView.region
+                region.center = placemark.coordinate
+                region.span.longitudeDelta /= 8.0
+                region.span.latitudeDelta /= 8.0
+                
+                self.lat = placemark.location!.coordinate.latitude
+                self.long = placemark.location!.coordinate.longitude
+                self.address = location
+                self.mapView.setRegion(region, animated: true)
+                self.mapView.addAnnotation(placemark)
+            }else{
+//                Helper.presentAlert(self, title: nil, message: "Must enter a Link.")
+            }
+        }
+    
+    }
+    
+    @IBAction func submit(sender: AnyObject) {
+
+        guard let link = linkToShare.text where (!link.isEmpty) else {
+            Helper.presentAlert(self, title: nil, message: "Must Enter a Link.")
+            return
+        }
+        
+        url = link
+        saveStudentLocation()
+        
+    }
+    
+    func saveStudentLocation(){
+        
+        let data: [String: AnyObject] = [
+            ParseConnection.ParameterKeys.UniqueKey: NetworkUdacity.sharedInstance().userID!,
+            ParseConnection.JSONResponseKeys.FirstName: NetworkUdacity.sharedInstance().firstName!,
+            ParseConnection.JSONResponseKeys.LastName: NetworkUdacity.sharedInstance().lastName!,
+            ParseConnection.JSONResponseKeys.MapString: address!,
+            ParseConnection.JSONResponseKeys.MediaURL: url!,
+            ParseConnection.JSONResponseKeys.Latitude: lat!,
+            ParseConnection.JSONResponseKeys.Longitude: long!
+        ]
+
+//        //unwrap optional data to post
+//        let newData:[String:AnyObject!] = (data as? [String:AnyObject])!
+//        
+        
+        if let objectId = objectId {
+            pConection.updateStudent(objectId, studentLocationData: data, completionForUpdate: { (success, errorString) in
+                if success {
+                    print("se logro actualizar")
+                }else{
+                    print("error al actualizar")
+                    print(errorString!)
+                }
+            })
+        }else{
+            pConection.postStudentLocation(data) { (success, errorString) in
+                if success {
+                    print("se actualizó el studentLocation")
+                }else{
+                    print("error")
+                    print(errorString!)
+                }
+            }
+        }
+        
+        
+    }
+    
+    
+    
+}
+
+extension InformationPostingViewController: UITextFieldDelegate {
+    func changeView() {
+        centerView.hidden = true
+        topInitialView.hidden = true
+        findMapSubmit.hidden = true
+//        submit.hidden = false
+        submitView.hidden = false
+        bottomView.alpha = 0.5
+//        buttonCancel.tintColor = UIColor.whiteColor()
+        buttonCancel.setTitleColor(UIColor.whiteColor(), forState: .Normal)
+        topView.backgroundColor = UIColor(red: 63/255, green: 116/255, blue: 167/255, alpha: 1)
+
+        
+    }
+    
+    private func configureTextField(textField: UITextField) {
+        let textFieldPaddingViewFrame = CGRectMake(0.0, 0.0, 13.0, 0.0)
+        let textFieldPaddingView = UIView(frame: textFieldPaddingViewFrame)
+        textField.leftView = textFieldPaddingView
+        textField.leftViewMode = .Always
+        //        textField.backgroundColor = Constants.UI.lightOrangeColor
+        textField.textColor = UIColor.whiteColor()
+        textField.attributedPlaceholder = NSAttributedString(string: textField.placeholder!, attributes: [NSForegroundColorAttributeName: UIColor.whiteColor()])
+        textField.tintColor = UIColor.whiteColor()
+        textField.delegate = self
+    }
+    
+    func textFieldShouldReturn(textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        return true
+    }
 }

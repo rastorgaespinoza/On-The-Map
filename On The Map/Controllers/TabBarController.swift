@@ -14,6 +14,17 @@ class TabBarController: UITabBarController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        NetworkUdacity.sharedInstance().getUserData { (success, userData, errorString) in
+            dispatch_async(dispatch_get_main_queue() ) {
+                if success {
+                    print("se obtuvo los datos del usuario")
+                }else{
+                    print("hubo un error al traer el userData")
+                    print(errorString!)
+                }
+            }
+            
+        }
     }
     
     @IBAction func pinAction(sender: AnyObject) {
@@ -27,7 +38,9 @@ class TabBarController: UITabBarController {
                     
                     let overwriteButton = UIAlertAction(title: "Overwrite ", style: .Default, handler: { (action) in
                         print("se desea sobreescribir")
-                        self.presentInformationPostingView()
+                        let controller = self.storyboard?.instantiateViewControllerWithIdentifier("InfoPostVC") as! InformationPostingViewController
+                        controller.objectId = location!.objectId
+                        self.presentViewController(controller, animated: true, completion: nil)
                     })
                     
                     let cancel = UIAlertAction(title: "Cancel", style: .Cancel, handler: nil)
@@ -44,6 +57,8 @@ class TabBarController: UITabBarController {
             }
             
         }
+        
+
     }
     
     @IBAction func refreshAction(sender: AnyObject) {
@@ -63,7 +78,7 @@ class TabBarController: UITabBarController {
                     NetworkUdacity.sharedInstance().sessionID = nil
                     NetworkUdacity.sharedInstance().userID = nil
                     
-//                    let storyboard = UIStoryboard(name: "Main", bundle: nil)
+                    TemporalData.sharedInstance().students.removeAll()
                     let loginVC = self.storyboard!.instantiateViewControllerWithIdentifier("LoginVC")
                     self.presentViewController(loginVC, animated: true, completion: nil)
                 }

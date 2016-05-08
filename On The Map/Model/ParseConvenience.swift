@@ -81,6 +81,59 @@ extension ParseConnection {
         
     }
     
+    func postStudentLocation( studentLocationData: [String: AnyObject], completionforPost: (success: Bool, errorString: String?) -> Void ) {
+        
+        /* 1. Specify parameters, method (if has {key}), and HTTP body (if POST) */
+        let parameters: [String: AnyObject] = [:]
+
+        let jsonBody: String = "{\"\(JSONResponseKeys.UniqueKey)\"=\"\(studentLocationData[JSONResponseKeys.UniqueKey]!)\", \"\(JSONResponseKeys.FirstName)\"=\"\(studentLocationData[JSONResponseKeys.FirstName]!)\",\"\(JSONResponseKeys.LastName)\"=\"\(studentLocationData[JSONResponseKeys.LastName]!)\",\"\(JSONResponseKeys.Latitude)\"=\(studentLocationData[JSONResponseKeys.Latitude]!),\"\(JSONResponseKeys.Longitude)\"=\(studentLocationData[JSONResponseKeys.Longitude]!), \"\(JSONResponseKeys.MapString)\"=\"\(studentLocationData[JSONResponseKeys.MapString]!)\",\"\(JSONResponseKeys.MediaURL)\"=\"\(studentLocationData[JSONResponseKeys.MediaURL]!)\"}"
+        
+//        let newJsonBody = escapedString(jsonBody)
+        
+        /* 2. Make the request */
+        taskForPOSTMethodParse(Methods.StudentLocations, parameters: parameters, jsonBody: jsonBody) { (result, error) in
+            /* 3. Send the desired value(s) to completion handler */
+            if let error = error {
+                print(error)
+                completionforPost(success: false, errorString: "Error: No se pudo obtener Ubicación.")
+            } else {
+                
+                if result != nil {
+                    completionforPost(success: true, errorString: nil)
+                    return
+                }else{
+                    completionforPost(success: false, errorString: "Not found (failed to cast)")
+                    return
+                }
+                
+            }
+        }
+
+    }
+    
+    
+    func updateStudent( objectID: String, studentLocationData: [String: AnyObject], completionForUpdate: (success: Bool, errorString: String?) -> Void) {
+        
+        /* 1. Specify parameters, method (if has {key}), and HTTP body (if POST) */
+        let parameters: [String: AnyObject] = [:]
+//        parameters["where"] = "{\"\(ParameterKeys.UniqueKey)\": \"\(NetworkUdacity.sharedInstance().userID!)\"}"
+        
+        let jsonBody: String = "{\"\(JSONResponseKeys.UniqueKey)\"=\"\(studentLocationData[JSONResponseKeys.UniqueKey]!)\", \"\(JSONResponseKeys.FirstName)\"=\"\(studentLocationData[JSONResponseKeys.FirstName]!)\",\"\(JSONResponseKeys.LastName)\"=\"\(studentLocationData[JSONResponseKeys.LastName]!)\",\"\(JSONResponseKeys.Latitude)\"=\(studentLocationData[JSONResponseKeys.Latitude]!),\"\(JSONResponseKeys.Longitude)\"=\(studentLocationData[JSONResponseKeys.Longitude]!), \"\(JSONResponseKeys.MapString)\"=\"\(studentLocationData[JSONResponseKeys.MapString]!)\",\"\(JSONResponseKeys.MediaURL)\"=\"\(studentLocationData[JSONResponseKeys.MediaURL]!)\"}"
+        /* 2. Make the request */
+        taskForPUTMethodParse(Methods.StudentLocations, parameters: parameters, jsonBody: jsonBody) { (result, error) in
+            if error != nil {
+                completionForUpdate(success: false, errorString: "error al actualizar student")
+            }else{
+                if let result = result as? [String: AnyObject] {
+                    completionForUpdate(success: true, errorString: nil)
+                }else{
+                    completionForUpdate(success: false, errorString: "error de casteo")
+                }
+            }
+        }
+    }
+    
+    
     func updateStudentLocation( studentLocation: StudentLocation, completionforUpdate: (success: Bool, errorString: String?) -> Void ) {
         
         /* 1. Specify parameters, method (if has {key}), and HTTP body (if POST) */
@@ -105,4 +158,5 @@ extension ParseConnection {
             }
         }
     }
+    
 }

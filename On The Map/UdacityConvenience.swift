@@ -80,4 +80,36 @@ extension NetworkUdacity {
             
         }
     }
+    
+    func getUserData(completion: (success: Bool, userData: [String: AnyObject]?, errorString: String?) -> Void) {
+        
+        /* 1. Specify parameters, method (if has {key}), and HTTP body (if POST) */
+        let parameters: [String: AnyObject] = [:]
+
+        /* 2. Make the request */
+        
+        let method = GeneralConnection.subtituteKeyInMethod(Methods.User, key: ParameterKeys.id, value: String(userID!))
+        
+        taskForGETMethod(method!, parameters: parameters) { (results, error) in
+            
+            /* 3. Send the desired value(s) to completion handler */
+            if let error = error {
+                print(error)
+                completion(success: false, userData: nil, errorString: "Login Failed (Session ID). User or password incorrect")
+            } else {
+                if let user = results[JSONResponseKeys.User] as? [String: AnyObject],
+                    let _firstName = user[JSONResponseKeys.FirstName] as? String,
+                    let _lastName = user[JSONResponseKeys.LastName] as? String {
+                        self.firstName = _firstName
+                        self.lastName = _lastName
+                        completion(success: true, userData: nil, errorString: nil)
+                } else {
+                    print("Could not find \(JSONResponseKeys.User) in \(results)")
+                    completion(success: false, userData: nil, errorString: "failed to get data User.")
+                }
+            }
+            
+        }
+        
+    }
 }

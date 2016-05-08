@@ -10,7 +10,7 @@ import UIKit
 
 class Helper {
     
-    class func presentAlert(view: UIViewController, title: String, message: String) {
+    class func presentAlert(view: UIViewController, title: String?, message: String?) {
         
         let alertView = UIAlertController(
             title: title,
@@ -31,7 +31,7 @@ class Helper {
         
         if let url = NSURL(string: urlString) {
             if !app.openURL(url) {
-                Helper.presentAlert(view, title: "error to open safari", message: "No se pudo abrir la url")
+                Helper.presentAlert(view, title: "error to open safari", message: "Not valid URL")
             }
         }else{
             Helper.presentAlert(view, title: "error to open safari", message: "Not valid URL")
