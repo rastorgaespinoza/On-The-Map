@@ -21,7 +21,7 @@ extension NetworkUdacity {
                 
                 completionHandlerForAuth(success: success, errorString: errorString)
             } else {
-                completionHandlerForAuth(success: success, errorString: errorString!)
+                completionHandlerForAuth(success: success, errorString: errorString)
             }
         }
   
@@ -40,8 +40,7 @@ extension NetworkUdacity {
             
             /* 3. Send the desired value(s) to completion handler */
             if let error = error {
-                print(error)
-                completionHandlerForSession(success: false, sessionID: nil, errorString: "Login Failed (Session ID). User or password incorrect")
+                completionHandlerForSession(success: false, sessionID: nil, errorString: error.localizedDescription)
             } else {
                 if let session = results[JSONResponseKeys.Session] as? [String: AnyObject],
                 let account = results[JSONResponseKeys.Account] as? [String: AnyObject],
@@ -49,12 +48,12 @@ extension NetworkUdacity {
                     let userID = account[JSONResponseKeys.AccountKey] as? String{
                     
                     
-                    self.userID = Int(userID)
+                    self.userID = userID
                     
                     completionHandlerForSession(success: true, sessionID: sessionID, errorString: nil)
                 } else {
                     print("Could not find \(JSONResponseKeys.SessionID) in \(results)")
-                    completionHandlerForSession(success: false, sessionID: nil, errorString: "Login Failed (Session ID).")
+                    completionHandlerForSession(success: false, sessionID: nil, errorString: "Login Failed (Session ID). ")
                 }
             }
             

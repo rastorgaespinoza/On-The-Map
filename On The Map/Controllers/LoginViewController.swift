@@ -21,7 +21,7 @@ class LoginViewController: UIViewController {
     @IBOutlet weak var usernameTextField: UITextField!
     @IBOutlet weak var passwordTextField: UITextField!
     @IBOutlet weak var loginButton: UIButton!
-    
+    @IBOutlet weak var registerUdacityButton: UIButton!
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     // MARK: Life Cycle
     
@@ -156,6 +156,7 @@ extension LoginViewController {
         usernameTextField.enabled = enabled
         passwordTextField.enabled = enabled
         loginButton.enabled = enabled
+        registerUdacityButton.enabled = enabled
         
         // adjust login button alpha
         if enabled {

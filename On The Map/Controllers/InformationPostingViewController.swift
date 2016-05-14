@@ -96,7 +96,7 @@ class InformationPostingViewController: UIViewController {
     
     func saveStudentLocation(){
         
-        let data: [String: AnyObject] = [
+        var data: [String: AnyObject] = [
             ParseConnection.ParameterKeys.UniqueKey: NetworkUdacity.sharedInstance().userID!,
             ParseConnection.JSONResponseKeys.FirstName: NetworkUdacity.sharedInstance().firstName!,
             ParseConnection.JSONResponseKeys.LastName: NetworkUdacity.sharedInstance().lastName!,
@@ -105,27 +105,23 @@ class InformationPostingViewController: UIViewController {
             ParseConnection.JSONResponseKeys.Latitude: lat!,
             ParseConnection.JSONResponseKeys.Longitude: long!
         ]
-
-//        //unwrap optional data to post
-//        let newData:[String:AnyObject!] = (data as? [String:AnyObject])!
-//        
+  
         
         if let objectId = objectId {
-            pConection.updateStudent(objectId, studentLocationData: data, completionForUpdate: { (success, errorString) in
+            data[ParseConnection.JSONResponseKeys.ObjectID] = objectId
+            pConection.updateStudent(data, completionForUpdate: { (success, errorString) in
                 if success {
-                    print("se logro actualizar")
+
                 }else{
-                    print("error al actualizar")
-                    print(errorString!)
+                    Helper.presentAlert(self, title: "Error:", message: errorString!)
                 }
             })
         }else{
             pConection.postStudentLocation(data) { (success, errorString) in
                 if success {
-                    print("se actualizó el studentLocation")
+
                 }else{
-                    print("error")
-                    print(errorString!)
+                    Helper.presentAlert(self, title: "Error:", message: errorString!)
                 }
             }
         }
@@ -142,10 +138,10 @@ extension InformationPostingViewController: UITextFieldDelegate {
         centerView.hidden = true
         topInitialView.hidden = true
         findMapSubmit.hidden = true
-//        submit.hidden = false
+
         submitView.hidden = false
         bottomView.alpha = 0.5
-//        buttonCancel.tintColor = UIColor.whiteColor()
+
         buttonCancel.setTitleColor(UIColor.whiteColor(), forState: .Normal)
         topView.backgroundColor = UIColor(red: 63/255, green: 116/255, blue: 167/255, alpha: 1)
 
@@ -157,7 +153,6 @@ extension InformationPostingViewController: UITextFieldDelegate {
         let textFieldPaddingView = UIView(frame: textFieldPaddingViewFrame)
         textField.leftView = textFieldPaddingView
         textField.leftViewMode = .Always
-        //        textField.backgroundColor = Constants.UI.lightOrangeColor
         textField.textColor = UIColor.whiteColor()
         textField.attributedPlaceholder = NSAttributedString(string: textField.placeholder!, attributes: [NSForegroundColorAttributeName: UIColor.whiteColor()])
         textField.tintColor = UIColor.whiteColor()

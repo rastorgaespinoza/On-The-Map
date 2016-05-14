@@ -10,12 +10,12 @@ import UIKit
 
 class StudentsViewController: UIViewController {
     
-    @IBOutlet weak var tableView: UITableView!
-    
     private let cellID = "cellStudent"
     private var pConnection: ParseConnection = ParseConnection.sharedInstance()
     private var tmpData: TemporalData = TemporalData.sharedInstance()
     
+    @IBOutlet weak var tableView: UITableView!
+
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -26,16 +26,15 @@ class StudentsViewController: UIViewController {
     }
     
     private func getStudents() {
-        pConnection.getStudentLocationsFromParse { (result, errorString) in
+        pConnection.getStudentLocations { (result, errorString) in
             if let result = result {
                 self.tmpData.students = result
-                
                 dispatch_async(dispatch_get_main_queue()) {
                     self.tableView.reloadData()
                 }
                 
             }else {
-                print(errorString)
+                Helper.presentAlert(self, title: "Error:", message: errorString!)
             }
         }
     }
@@ -65,5 +64,13 @@ extension StudentsViewController: UITableViewDataSource, UITableViewDelegate {
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         Helper.openURL(self, urlString: tmpData.students[indexPath.row].mediaURL)
+    }
+}
+
+extension StudentsViewController: CommonOperations
+{
+    func refresh(sender: AnyObject)
+    {
+        tableView.reloadData()
     }
 }

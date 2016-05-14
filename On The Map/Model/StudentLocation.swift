@@ -35,7 +35,7 @@ struct StudentLocation {
         var students = [StudentLocation]()
         for result in results {
             let stu = StudentLocation(dictionary: result)
-            if stu.firstName != "nil" {
+            if stu.firstName != "" {
                 students.append(stu)
             }
         }

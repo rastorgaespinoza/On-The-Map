@@ -32,23 +32,26 @@ class GeneralConnection {
     
     //check data for task
     class func validateData( client: TypeOfClient, method: String, data: NSData?, response: NSURLResponse?, error: NSError?, completionData: (result: AnyObject!, error: NSError?) -> Void) {
-        
         func sendError(error: String) {
-            print(error)
             let userInfo = [NSLocalizedDescriptionKey : error]
             completionData(result: nil, error: NSError(domain: method, code: 1, userInfo: userInfo))
         }
         
         /* GUARD: Was there an error? */
         guard (error == nil) else {
-            sendError("There was an error with your request: \(error!)")
+            sendError("There was an error with your request: \(error!.localizedDescription)")
             return
         }
         
         /* GUARD: Did we get a successful 2XX response? */
         guard let statusCode = (response as? NSHTTPURLResponse)?.statusCode where statusCode >= 200 && statusCode <= 299 else {
             print((response as? NSHTTPURLResponse)?.statusCode)
-            sendError("Your request returned a status code other than 2xx!")
+            if (response as? NSHTTPURLResponse)?.statusCode >= 401 && (response as? NSHTTPURLResponse)?.statusCode <= 403 {
+                sendError("Invalid Username or Password!")
+            }else{
+                sendError("Your request returned a status code other than 2xx!")
+            }
+            
             return
         }
         
@@ -59,26 +62,16 @@ class GeneralConnection {
         }
         
         /* 5/6. Parse the data and use the data (happens in completion handler) */
-        
-        
-//        let client = client
         switch client {
             
         //SKIP THE FIRST 5 CHARACTERS OF THE RESPONSE FROM THE UDACITY API
         case .Udacity:
             let newData = data.subdataWithRange(NSMakeRange(5, data.length - 5)) /* subset response data! */
-            
             self.convertDataWithCompletionHandler(newData, completionHandlerForConvertData: completionData)
         default:
             self.convertDataWithCompletionHandler(data, completionHandlerForConvertData: completionData)
         }
-//        if client == "Udacity" {
-//            
-//        }else{
-//            
-//        }
 
-        
     }
     
     // substitute the key for the value that is contained within the method name
@@ -89,7 +82,6 @@ class GeneralConnection {
             return nil
         }
     }
-    
     
 }
 

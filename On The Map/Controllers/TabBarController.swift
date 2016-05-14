@@ -17,10 +17,8 @@ class TabBarController: UITabBarController {
         NetworkUdacity.sharedInstance().getUserData { (success, userData, errorString) in
             dispatch_async(dispatch_get_main_queue() ) {
                 if success {
-                    print("se obtuvo los datos del usuario")
                 }else{
-                    print("hubo un error al traer el userData")
-                    print(errorString!)
+                    Helper.presentAlert(self, title: "Error:", message: errorString!)
                 }
             }
             
@@ -28,16 +26,14 @@ class TabBarController: UITabBarController {
     }
     
     @IBAction func pinAction(sender: AnyObject) {
-        print("se presionó sobre el botón pin")
         pConnection.getStudentLocationForUser { (success, location, errorString) in
             dispatch_async(dispatch_get_main_queue() ) {
                 if success {
-                    print("se encontró usuario")
+
                     let alertVC = UIAlertController(
                         title: nil, message: "You have already posted a student location. Would you like to overwrite your current location?", preferredStyle: .Alert)
                     
                     let overwriteButton = UIAlertAction(title: "Overwrite ", style: .Default, handler: { (action) in
-                        print("se desea sobreescribir")
                         let controller = self.storyboard?.instantiateViewControllerWithIdentifier("InfoPostVC") as! InformationPostingViewController
                         controller.objectId = location!.objectId
                         self.presentViewController(controller, animated: true, completion: nil)
@@ -62,11 +58,15 @@ class TabBarController: UITabBarController {
     }
     
     @IBAction func refreshAction(sender: AnyObject) {
-        pConnection.getStudentLocationsFromParse { (result, errorString) in
+        pConnection.getStudentLocations { (result, errorString) in
             if let result = result {
+                
                 TemporalData.sharedInstance().students = result
+                if let selectedVC = self.selectedViewController as? CommonOperations {
+                    selectedVC.refresh(sender)
+                }
             }else {
-                print(errorString!)
+                Helper.presentAlert(self, title: "Error:", message: errorString!)
             }
         }
     }
@@ -92,4 +92,8 @@ class TabBarController: UITabBarController {
     }
 
 
+}
+
+protocol CommonOperations: AnyObject {
+    func refresh(sender: AnyObject)
 }
