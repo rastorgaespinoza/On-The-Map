@@ -11,9 +11,9 @@
 
 import Foundation
 
-// MARK: - NetworkUdacity: NSObject
+// MARK: - NetworkUdacity
 
-class NetworkUdacity : NSObject {
+class NetworkUdacity {
     
     // MARK: Properties
     
@@ -25,12 +25,6 @@ class NetworkUdacity : NSObject {
     var userID : String? = nil
     var firstName: String? = nil
     var lastName: String? = nil
-    
-    // MARK: Initializers
-    
-    override init() {
-        super.init()
-    }
     
     // MARK: GET
     func taskForGETMethod(method: String, parameters: [String:AnyObject], completionHandlerForGET: (result: AnyObject!, error: NSError?) -> Void) -> NSURLSessionDataTask {

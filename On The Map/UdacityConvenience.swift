@@ -71,7 +71,7 @@ extension NetworkUdacity {
 
                 if let error = error {
                     print(error)
-                    completionForLogout(success: false, errorString: "Logout Failed (\(error)).")
+                    completionForLogout(success: false, errorString: "Logout Failed (\(error.localizedDescription)).")
                 }else{
                     completionForLogout(success: true, errorString: nil)
                     

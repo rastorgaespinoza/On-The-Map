@@ -458,6 +458,9 @@
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                     </tabBar>
                     <connections>
+                        <outlet property="logoutButton" destination="jbC-1U-Sct" id="h1S-mB-1Gv"/>
+                        <outlet property="pinButton" destination="KKz-C8-Ppc" id="7x2-JW-jEP"/>
+                        <outlet property="refreshButton" destination="5pu-D2-u20" id="YnD-3A-irw"/>
                         <segue destination="K55-Dh-bFI" kind="relationship" relationship="viewControllers" id="3mX-ty-aeF"/>
                         <segue destination="hDK-qe-BIP" kind="relationship" relationship="viewControllers" id="r7o-O7-2oe"/>
                     </connections>

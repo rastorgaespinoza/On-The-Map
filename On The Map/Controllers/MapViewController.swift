@@ -33,15 +33,20 @@ class MapViewController: UIViewController {
     
     
     private func getStudents() {
+        startRefresh()
         pConnection.getStudentLocations { (result, errorString) in
             if let result = result {
                 self.tmpData.students = result
                 dispatch_async(dispatch_get_main_queue()) {
-                    self.setLocations(self.tmpData.students)
+                    self.stopRefresh()
+//                    self.setLocations(self.tmpData.students)
                 }
                 
             }else {
-                Helper.presentAlert(self, title: "Error:", message: errorString!)
+                dispatch_async(dispatch_get_main_queue()) {
+                    self.stopRefresh()
+                    Helper.presentAlert(self, title: "Error:", message: errorString!)
+                }
             }
         }
     }

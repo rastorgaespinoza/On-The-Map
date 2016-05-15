@@ -26,15 +26,9 @@ class StudentsViewController: UIViewController {
         NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(StudentsViewController.stopRefresh), name: stopRefreshNotif, object: nil)
     }
     
-//    override func viewWillDisappear(animated: Bool) {
-//        super.viewWillDisappear(animated)
-//        NSNotificationCenter.defaultCenter().removeObserver(self)
-//    }
     
     private func getStudents() {
-//        NSNotificationCenter.defaultCenter().postNotificationName(startRefreshNotif, object: nil)
         pConnection.getStudentLocations { (result, errorString) in
-//            NSNotificationCenter.defaultCenter().postNotificationName(stopRefreshNotif, object: nil)
             if let result = result {
                 self.tmpData.students = result
                 dispatch_async(dispatch_get_main_queue()) {
@@ -42,19 +36,19 @@ class StudentsViewController: UIViewController {
                 }
                 
             }else {
-                Helper.presentAlert(self, title: "Error:", message: errorString!)
+                dispatch_async(dispatch_get_main_queue()) {
+                    Helper.presentAlert(self, title: "Error:", message: errorString!)
+                }
             }
         }
     }
     
     func startRefresh(){
         //alguna animación
-        print("comienza la animación en el tableView...")
     }
     
     func stopRefresh() {
         tableView.reloadData()
-        print("se detiene la animación en tableView")
     }
     
 }

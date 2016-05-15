@@ -168,10 +168,12 @@ extension InformationPostingViewController: UITextFieldDelegate {
         centerView.userInteractionEnabled = enabled
         bottomView.userInteractionEnabled = enabled
         if enabled {
+            view.alpha = 1
             findMapSubmit.alpha = 1
             submit.alpha = 1
             submit.enabled = enabled
         }else{
+            view.alpha = 0.5
             findMapSubmit.alpha = 0.5
             submit.alpha = 0.5
             submit.enabled = enabled
