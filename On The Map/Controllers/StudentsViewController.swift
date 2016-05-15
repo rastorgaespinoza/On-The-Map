@@ -22,11 +22,19 @@ class StudentsViewController: UIViewController {
         if tmpData.students.isEmpty {
             getStudents()
         }
-        
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(StudentsViewController.startRefresh), name: startRefreshNotif, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(StudentsViewController.stopRefresh), name: stopRefreshNotif, object: nil)
     }
     
+//    override func viewWillDisappear(animated: Bool) {
+//        super.viewWillDisappear(animated)
+//        NSNotificationCenter.defaultCenter().removeObserver(self)
+//    }
+    
     private func getStudents() {
+//        NSNotificationCenter.defaultCenter().postNotificationName(startRefreshNotif, object: nil)
         pConnection.getStudentLocations { (result, errorString) in
+//            NSNotificationCenter.defaultCenter().postNotificationName(stopRefreshNotif, object: nil)
             if let result = result {
                 self.tmpData.students = result
                 dispatch_async(dispatch_get_main_queue()) {
@@ -39,7 +47,16 @@ class StudentsViewController: UIViewController {
         }
     }
     
-
+    func startRefresh(){
+        //alguna animación
+        print("comienza la animación en el tableView...")
+    }
+    
+    func stopRefresh() {
+        tableView.reloadData()
+        print("se detiene la animación en tableView")
+    }
+    
 }
 
 extension StudentsViewController: UITableViewDataSource, UITableViewDelegate {
@@ -65,12 +82,6 @@ extension StudentsViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         Helper.openURL(self, urlString: tmpData.students[indexPath.row].mediaURL)
     }
+    
 }
 
-extension StudentsViewController: CommonOperations
-{
-    func refresh(sender: AnyObject)
-    {
-        tableView.reloadData()
-    }
-}

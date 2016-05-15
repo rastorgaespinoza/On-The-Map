@@ -7,11 +7,12 @@
 //
 
 import Foundation
+import MapKit
 
 class TemporalData {
     
     private var _students: [StudentLocation] = []
-    
+    var indexOfAnnotation: Int = -1
     var students: [StudentLocation] {
         get {
             return _students
@@ -21,7 +22,7 @@ class TemporalData {
         }
     }
     
-    
+    var annotations = [MKPointAnnotation]()
     
     // MARK: Shared Instance
     

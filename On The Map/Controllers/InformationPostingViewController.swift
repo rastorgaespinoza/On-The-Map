@@ -54,6 +54,7 @@ class InformationPostingViewController: UIViewController {
             return
         }
         
+        view.endEditing(true)
         
         //retrieved from Stackoverflow: "How to get lat and long coordinates from address string"
         //url: http://stackoverflow.com/questions/18563084/how-to-get-lat-and-long-coordinates-from-address-string
@@ -75,8 +76,6 @@ class InformationPostingViewController: UIViewController {
                 self.address = location
                 self.mapView.setRegion(region, animated: true)
                 self.mapView.addAnnotation(placemark)
-            }else{
-//                Helper.presentAlert(self, title: nil, message: "Must enter a Link.")
             }
         }
     
@@ -88,7 +87,7 @@ class InformationPostingViewController: UIViewController {
             Helper.presentAlert(self, title: nil, message: "Must Enter a Link.")
             return
         }
-        
+        view.endEditing(true)
         url = link
         saveStudentLocation()
         
@@ -111,7 +110,13 @@ class InformationPostingViewController: UIViewController {
             data[ParseConnection.JSONResponseKeys.ObjectID] = objectId
             pConection.updateStudent(data, completionForUpdate: { (success, errorString) in
                 if success {
-
+                    
+                    self.dismissViewControllerAnimated(true, completion: nil)
+                    let navC = self.presentingViewController as! UINavigationController
+                    
+                    if let tabBarVC = navC.viewControllers.first as? TabBarController {
+                        tabBarVC.refreshAction(self)
+                    }
                 }else{
                     Helper.presentAlert(self, title: "Error:", message: errorString!)
                 }
@@ -119,7 +124,12 @@ class InformationPostingViewController: UIViewController {
         }else{
             pConection.postStudentLocation(data) { (success, errorString) in
                 if success {
-
+                    self.dismissViewControllerAnimated(true, completion: nil)
+                    let navC = self.presentingViewController as! UINavigationController
+                    
+                    if let tabBarVC = navC.viewControllers.first as? TabBarController {
+                        tabBarVC.refreshAction(self)
+                    }
                 }else{
                     Helper.presentAlert(self, title: "Error:", message: errorString!)
                 }

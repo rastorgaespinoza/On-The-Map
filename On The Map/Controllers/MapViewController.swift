@@ -9,11 +9,13 @@
 import UIKit
 import MapKit
 
+
+
 class MapViewController: UIViewController {
 
     private var tmpData: TemporalData = TemporalData.sharedInstance()
     private var pConnection: ParseConnection = ParseConnection.sharedInstance()
-    
+    var annotations = [MKPointAnnotation]()
     @IBOutlet weak var mapView: MKMapView!
     
     override func viewDidLoad() {
@@ -23,7 +25,10 @@ class MapViewController: UIViewController {
             getStudents()
         }
         
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(MapViewController.startRefresh), name: startRefreshNotif, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(MapViewController.stopRefresh), name: stopRefreshNotif, object: nil)
     }
+    
     
     private func getStudents() {
         pConnection.getStudentLocations { (result, errorString) in
@@ -40,9 +45,9 @@ class MapViewController: UIViewController {
     }
     
     func setLocations(locations: [StudentLocation]) {
-        
-        var annotations = [MKPointAnnotation]()
 
+        mapView.removeAnnotations(annotations)
+        annotations.removeAll()
         for student in locations {
             
             let lat = CLLocationDegrees(student.latitude )
@@ -105,11 +110,17 @@ extension MapViewController: MKMapViewDelegate {
     }
 }
 
-//protocol implementation:
-extension MapViewController: CommonOperations
-{
-    func refresh(sender: AnyObject)
-    {
+
+extension MapViewController {
+    
+    func startRefresh() {
+        //add activityIndicator...
+    }
+    
+    func stopRefresh() {
+        //end activityIndicator...
         setLocations(tmpData.students)
     }
+    
 }
+

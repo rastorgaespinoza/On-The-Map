@@ -8,6 +8,9 @@
 
 import UIKit
 
+let startRefreshNotif = "com.rastorga.startRefreshKey"
+let stopRefreshNotif = "com.rastorga.stopRefreshKey"
+
 class TabBarController: UITabBarController {
 
     let pConnection: ParseConnection = ParseConnection.sharedInstance()
@@ -34,6 +37,7 @@ class TabBarController: UITabBarController {
                         title: nil, message: "You have already posted a student location. Would you like to overwrite your current location?", preferredStyle: .Alert)
                     
                     let overwriteButton = UIAlertAction(title: "Overwrite ", style: .Default, handler: { (action) in
+                        
                         let controller = self.storyboard?.instantiateViewControllerWithIdentifier("InfoPostVC") as! InformationPostingViewController
                         controller.objectId = location!.objectId
                         self.presentViewController(controller, animated: true, completion: nil)
@@ -58,15 +62,16 @@ class TabBarController: UITabBarController {
     }
     
     @IBAction func refreshAction(sender: AnyObject) {
+        NSNotificationCenter.defaultCenter().postNotificationName(startRefreshNotif, object: self)
         pConnection.getStudentLocations { (result, errorString) in
-            if let result = result {
+            dispatch_async(dispatch_get_main_queue() ) {
                 
-                TemporalData.sharedInstance().students = result
-                if let selectedVC = self.selectedViewController as? CommonOperations {
-                    selectedVC.refresh(sender)
+                if let result = result {
+                    TemporalData.sharedInstance().students = result
+                }else {
+                    Helper.presentAlert(self, title: "Error:", message: errorString!)
                 }
-            }else {
-                Helper.presentAlert(self, title: "Error:", message: errorString!)
+                NSNotificationCenter.defaultCenter().postNotificationName(stopRefreshNotif, object: self)
             }
         }
     }
