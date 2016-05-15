@@ -32,6 +32,8 @@ class InformationPostingViewController: UIViewController {
     @IBOutlet weak var submitView: UIView!
     @IBOutlet weak var topView: UIView!
     @IBOutlet weak var topInitialView: UIView!
+    @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
+    @IBOutlet weak var mapActivityIndicator: UIActivityIndicatorView!
 
     
 
@@ -55,27 +57,34 @@ class InformationPostingViewController: UIViewController {
         }
         
         view.endEditing(true)
-        
+        activityIndicator.startAnimating()
+        setUIEnabled(false)
         //retrieved from Stackoverflow: "How to get lat and long coordinates from address string"
         //url: http://stackoverflow.com/questions/18563084/how-to-get-lat-and-long-coordinates-from-address-string
         //answered Dec 16 '15 at 5:26 from Vijay Singh Rana
 
         let geocoder: CLGeocoder = CLGeocoder()
         geocoder.geocodeAddressString(location) { (placemarks, error) in
-            if let placemarks = placemarks where (placemarks.count > 0) {
-                self.changeView()
-                let topResult: CLPlacemark = placemarks.first!
-                let placemark: MKPlacemark = MKPlacemark(placemark: topResult)
-                var region: MKCoordinateRegion = self.mapView.region
-                region.center = placemark.coordinate
-                region.span.longitudeDelta /= 8.0
-                region.span.latitudeDelta /= 8.0
-                
-                self.lat = placemark.location!.coordinate.latitude
-                self.long = placemark.location!.coordinate.longitude
-                self.address = location
-                self.mapView.setRegion(region, animated: true)
-                self.mapView.addAnnotation(placemark)
+            dispatch_async(dispatch_get_main_queue()) {
+                self.activityIndicator.stopAnimating()
+                self.setUIEnabled(true)
+                if let placemarks = placemarks where (placemarks.count > 0) {
+                    self.changeView()
+                    let topResult: CLPlacemark = placemarks.first!
+                    let placemark: MKPlacemark = MKPlacemark(placemark: topResult)
+                    var region: MKCoordinateRegion = self.mapView.region
+                    region.center = placemark.coordinate
+                    region.span.longitudeDelta /= 8.0
+                    region.span.latitudeDelta /= 8.0
+                    
+                    self.lat = placemark.location!.coordinate.latitude
+                    self.long = placemark.location!.coordinate.longitude
+                    self.address = location
+                    self.mapView.setRegion(region, animated: true)
+                    self.mapView.addAnnotation(placemark)
+                }else{
+                    Helper.presentAlert(self, title: nil, message: "No se encontró ubicación.")
+                }
             }
         }
     
@@ -94,6 +103,8 @@ class InformationPostingViewController: UIViewController {
     }
     
     func saveStudentLocation(){
+        setUIEnabled(false)
+        mapActivityIndicator.startAnimating()
         
         var data: [String: AnyObject] = [
             ParseConnection.ParameterKeys.UniqueKey: NetworkUdacity.sharedInstance().userID!,
@@ -109,29 +120,38 @@ class InformationPostingViewController: UIViewController {
         if let objectId = objectId {
             data[ParseConnection.JSONResponseKeys.ObjectID] = objectId
             pConection.updateStudent(data, completionForUpdate: { (success, errorString) in
-                if success {
-                    
-                    self.dismissViewControllerAnimated(true, completion: nil)
-                    let navC = self.presentingViewController as! UINavigationController
-                    
-                    if let tabBarVC = navC.viewControllers.first as? TabBarController {
-                        tabBarVC.refreshAction(self)
+                dispatch_async(dispatch_get_main_queue() ) {
+                
+                    self.mapActivityIndicator.stopAnimating()
+                    self.setUIEnabled(true)
+                    if success {
+                        
+                        self.dismissViewControllerAnimated(true, completion: nil)
+                        let navC = self.presentingViewController as! UINavigationController
+                        
+                        if let tabBarVC = navC.viewControllers.first as? TabBarController {
+                            tabBarVC.refreshAction(self)
+                        }
+                    }else{
+                        Helper.presentAlert(self, title: "Error:", message: errorString!)
                     }
-                }else{
-                    Helper.presentAlert(self, title: "Error:", message: errorString!)
                 }
             })
         }else{
             pConection.postStudentLocation(data) { (success, errorString) in
-                if success {
-                    self.dismissViewControllerAnimated(true, completion: nil)
-                    let navC = self.presentingViewController as! UINavigationController
-                    
-                    if let tabBarVC = navC.viewControllers.first as? TabBarController {
-                        tabBarVC.refreshAction(self)
+                dispatch_async(dispatch_get_main_queue() ) {
+                    self.mapActivityIndicator.stopAnimating()
+                    self.setUIEnabled(true)
+                    if success {
+                        self.dismissViewControllerAnimated(true, completion: nil)
+                        let navC = self.presentingViewController as! UINavigationController
+                        
+                        if let tabBarVC = navC.viewControllers.first as? TabBarController {
+                            tabBarVC.refreshAction(self)
+                        }
+                    }else{
+                        Helper.presentAlert(self, title: "Error:", message: errorString!)
                     }
-                }else{
-                    Helper.presentAlert(self, title: "Error:", message: errorString!)
                 }
             }
         }
@@ -144,6 +164,20 @@ class InformationPostingViewController: UIViewController {
 }
 
 extension InformationPostingViewController: UITextFieldDelegate {
+    private func setUIEnabled(enabled: Bool){
+        centerView.userInteractionEnabled = enabled
+        bottomView.userInteractionEnabled = enabled
+        if enabled {
+            findMapSubmit.alpha = 1
+            submit.alpha = 1
+            submit.enabled = enabled
+        }else{
+            findMapSubmit.alpha = 0.5
+            submit.alpha = 0.5
+            submit.enabled = enabled
+        }
+    }
+    
     func changeView() {
         centerView.hidden = true
         topInitialView.hidden = true

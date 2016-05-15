@@ -15,8 +15,10 @@ class MapViewController: UIViewController {
 
     private var tmpData: TemporalData = TemporalData.sharedInstance()
     private var pConnection: ParseConnection = ParseConnection.sharedInstance()
-    var annotations = [MKPointAnnotation]()
+    private var annotations = [MKPointAnnotation]()
+    private var customPopoverMaskView: UIView!
     @IBOutlet weak var mapView: MKMapView!
+    @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -115,10 +117,27 @@ extension MapViewController {
     
     func startRefresh() {
         //add activityIndicator...
+        customPopoverMaskView = UIView(frame: CGRectMake(0,0, view.bounds.size.width, view.bounds.size.height ) )
+        customPopoverMaskView.backgroundColor = UIColor.blackColor()
+        customPopoverMaskView.alpha = 0.3
+        customPopoverMaskView.userInteractionEnabled = false
+        
+        UIView.transitionWithView(view, duration: 0.3, options: UIViewAnimationOptions.TransitionCrossDissolve, animations: {
+            self.view.addSubview(self.customPopoverMaskView)
+            }, completion: { _ in
+        self.activityIndicator.startAnimating()
+        })
+        
     }
     
     func stopRefresh() {
         //end activityIndicator...
+        UIView.transitionWithView(view, duration: 0.3, options: UIViewAnimationOptions.TransitionCrossDissolve, animations: {
+            self.customPopoverMaskView.removeFromSuperview()
+            }, completion: { _ in
+            self.activityIndicator.stopAnimating()
+        })
+        
         setLocations(tmpData.students)
     }
     
